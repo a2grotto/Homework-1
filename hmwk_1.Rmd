@@ -1,0 +1,125 @@
+---
+title: "Homework 1"
+author: "Adam Grottoli"
+date: "January 13, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+setwd("~/R/R practice/BioStats")
+```
+
+#PART I
+##Question 1.
+```{r} 
+tsa=c(0.17,0.20,0.13,0.20,0.24,0.25,0.15,0.21,0.21)
+tsb=c(0.47,0.21,0.34,0.32,0.33,0.29,0.18,0.20,0.25)
+cs=c(0.44,0.33,0.37,0.33,0.31,0.27,0.22,0.30,0.28)
+```
+
+
+##Question 2.
+```{r}
+(mean(tsa)-mean(tsb))
+```
+
+
+##Question 3.
+```{r}
+(mean(tsa)-mean(cs))
+```
+
+
+##Question 4.
+```{r}
+hist(cs, xlab=expression(paste("Hydrogen peroxide (",mu,"moles/g)")), main = NULL)
+```
+Figure 1. Occurance of hydrogen peroxide concentrations in the leaves of common potatoes
+
+##Question 5.
+```{r message=FALSE, warning=FALSE}
+hpo=c(0.27,0.21,0.34,0.32,0.24,0.29,0.18,0.20,0.29)
+fgs_growth=c(1.79,1.01,1.71,1.89,1.41,1.15,1.13,1.20,1.10)
+fgs_dfns=data.frame('Peroxide'=hpo,'Growth.rate'=fgs_growth)
+library(knitr)
+names(fgs_dfns)[2]=paste("Growth Rate")
+kable(fgs_dfns, caption="Table 1. Fungus growth and hydrogen peroxide concentration in potato plant leaves")
+```
+
+
+##Question 6.
+```{r}
+plot(fgs_dfns, xlab=expression(paste('Hydrogen peroxide concentration (',mu,'moles/g)')), ylab='Fungal growth rate (cm/day)')
+```
+Figure 2. Fungal defense in leaves of potato plants in relation to hydrogen peroxide concentration
+
+##Question 7.
+The plot shows a positive trend with fungal growth increasing as hydrogen peroxide concentration increases. This trend disagrees with the hypothesis that hydrogen peroxide defends against fungal growth.
+
+#PART II
+##Question 8.
+```{r}
+turtle.success=read.csv("turtlenesting.csv")
+```
+
+
+##Question 9.
+```{r message=FALSE, warning=FALSE}
+library(knitr)
+kable(table(turtle.success), caption = "Table 2. Outcomes of nesting attempts by 3 marine turtle species")
+```
+
+##Question 10.
+```{r}
+library(ggplot2)
+ggplot(data=turtle.success, aes (x=Species, fill=Nesting.status)) +   geom_bar(position=position_dodge()) +
+ labs(y='Number of Attempts',fill='Nesting Outcome') +
+ ylim(0,20)
+```
+Figure 3. Number of successful and aborted nesting attempts in 3 species of marine turtle 
+
+##Question 11.
+```{r message=FALSE, warning=FALSE}
+library(dplyr)
+turtle_comb=data.frame(table(turtle.success))
+turtle_comb %>% 
+  group_by(Nesting.status) %>%
+summarise(mean=mean(Freq))
+turtle_comb %>% 
+  group_by(Nesting.status) %>%
+summarise(sd=sd(Freq))
+```
+
+
+##Question 12.
+```{r}
+turtle_comb %>% 
+group_by(Species) %>%
+summarise(Freq = Freq[Nesting.status == "Aborted"] / Freq[Nesting.status == "Success"])
+```
+Given that 75% of Hawksbill nesting attempts were aborted, I would choose this species as requiring the greatest conservation effort.
+
+##Question 13. 
+```{r}
+turtle.eggs=read.csv("meaneggs.csv")
+kable(turtle.eggs, caption = "Table 3. Average number of eggs layed by per nest at 16 beach sections in 3 marine turtle species")
+```
+
+
+##Question 14.
+```{r}
+ggplot(stack(turtle.eggs), aes (x=ind, y = values)) +
+  geom_boxplot() +
+  labs(y='Mean number of Eggs', x='Species') +
+  ylim(80,160)
+```
+Figure 4. Average marine turtle eggs per nest at 16 beach sections
+
+##Question 15.
+```{r}
+ggplot(data = turtle.eggs, aes(y = Leatherback, x = Hawksbill)) +
+geom_point(size=2) +
+ylim(80,150)
+```
+Figure 5. Average Leatherback vs Hawksbill turtle eggs per nest at 16 beach sections
+
